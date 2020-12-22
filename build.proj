@@ -90,6 +90,7 @@
   <UsingTask TaskName="ESRPSignTask" AssemblyFile="$(CISignRepoPath)/tools/sdkbuildtools/tasks/MS.Az.Sdk.OnPremise.Build.Tasks.dll" />
   <UsingTask TaskName="FilesChangedTask" AssemblyFile="$(RepoArtifacts)Microsoft.Azure.Build.Tasks/Microsoft.Azure.Build.Tasks.dll" />
   <UsingTask TaskName="FilterTask" AssemblyFile="$(RepoArtifacts)Microsoft.Azure.Build.Tasks/Microsoft.Azure.Build.Tasks.dll" />
+  <UsingTask TaskName="CIFilterTask" AssemblyFile="$(RepoArtifacts)Microsoft.Azure.Build.Tasks/Microsoft.Azure.Build.Tasks.dll" />
 
   <Target Name="Clean">
     <Message Importance="high" Text="Cleaning Cmdlets..." />
@@ -119,23 +120,27 @@
       <Output TaskParameter="FilesChanged" ItemName="FilesChanged" />
     </FilesChangedTask>
 
+    <CIFilterTask FilesChanged="@(FilesChanged)" TargetModule="$(TargetModule)">
+      <Output TaskParameter="Result" ItemName="StepResult" />
+    </CIFilterTask>
+    <Message Importance="high" Text="%(StepResult.Identity)" />
     <!-- Get the list of modules changed -->
-    <FilterTask FilesChanged="@(FilesChanged)" MapFilePath="./ModuleMappings.json" TargetModule="$(TargetModule)">
+    <!-- <FilterTask FilesChanged="@(FilesChanged)" MapFilePath="./ModuleMappings.json" TargetModule="$(TargetModule)">
       <Output TaskParameter="Output" ItemName="ModulesChanged" />
     </FilterTask>
     <Message Importance="high" Text="Filtering help generation and StaticAnalysis by the following modules:" />
     <Message Importance="high" Text="%(ModulesChanged.Identity)" />
     <Message Importance="high" Text="Total: @(ModulesChanged->Count())" />
-    <Message Importance="high" Text="" />
+    <Message Importance="high" Text="" /> -->
 
     <!-- Get the list of projects to build -->
-    <FilterTask FilesChanged="@(FilesChanged)" MapFilePath="./CsprojMappings.json" TargetModule="$(TargetModule)">
+    <!-- <FilterTask FilesChanged="@(FilesChanged)" MapFilePath="./CsprojMappings.json" TargetModule="$(TargetModule)">
       <Output TaskParameter="Output" ItemName="ProjectsToBuild" />
     </FilterTask>
     <Message Importance="high" Text="Filtering projects to build by the following:" />
     <Message Importance="high" Text="%(ProjectsToBuild.Identity)" />
     <Message Importance="high" Text="Total: @(ProjectsToBuild->Count())" />
-    <Message Importance="high" Text="" />
+    <Message Importance="high" Text="" /> -->
   </Target>
 
   <!-- Build all flavors of the Cmdlets -->

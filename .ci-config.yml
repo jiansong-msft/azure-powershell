@@ -1,0 +1,17 @@
+rules:
+  - pattern: (src/*/document/*)|(ChangeLog.md$)|readme.md
+    steps: []
+  - pattern: (src/.*/test/*)|(src/.*/*.Test/*)
+    steps: ['build:module', 'test:module']
+  - pattern: (src/.*/.*/help/.*.md$)|(src/.*/help/.*.md$)
+    steps: ['build:module', 'help:module']
+  - pattern: src/Accounts/*.sln$
+    steps: ['build:all', 'dependence:all', 'test:all']
+  - pattern: src/Accounts/*
+    steps: ['build:all', 'breaking-change:module', 'help:module', 'signature:module', 'test:all']
+  - pattern: src/*.sln$
+    steps: ['build:module', 'dependence:module', 'test:module']
+  - pattern: src/*
+    steps: ['build:module', 'breaking-change:module', 'help:module', 'signature:module', 'test:module']
+  - pattern: tools/StaticAnalysis/*
+    steps: ['build:all', 'breaking-change:all', 'dependence:all', 'help:all', 'signature:all']
