@@ -1,17 +1,28 @@
 rules:
-  - pattern: (src/*/document/*)|(ChangeLog.md$)|readme.md
+  - patterns: ['src/*/document/*', 'ChangeLog.md', 'readme.md']
     steps: []
-  - pattern: (src/.*/test/*)|(src/.*/*.Test/*)
+  - patterns: ['src/**/test/*', 'src/**/*.Test/*']
     steps: ['build:module', 'test:module']
-  - pattern: (src/.*/.*/help/.*.md$)|(src/.*/help/.*.md$)
+  - patterns: ['src/.*/.*/help/.*.md', 'src/.*/help/.*.md']
     steps: ['build:module', 'help:module']
-  - pattern: src/Accounts/*.sln$
+  - patterns:
+      - src/Accounts/*.csproj
     steps: ['build:all', 'dependence:all', 'test:all']
-  - pattern: src/Accounts/*
+  - patterns: 
+      - src/Accounts/*
     steps: ['build:all', 'breaking-change:module', 'help:module', 'signature:module', 'test:all']
-  - pattern: src/*.sln$
+  - patterns:
+      - src/*.csproj
     steps: ['build:module', 'dependence:module', 'test:module']
-  - pattern: src/*
+  - patterns: 
+      - src/*
     steps: ['build:module', 'breaking-change:module', 'help:module', 'signature:module', 'test:module']
-  - pattern: tools/StaticAnalysis/*
+  - patterns: 
+      - tools/StaticAnalysis/*
     steps: ['build:all', 'breaking-change:all', 'dependence:all', 'help:all', 'signature:all']
+  - patterns:
+      - tools/Az.Tools.Predictor/*
+    steps: ['sub-task:predictor']
+  - patterns:
+      - tools/Az.Tools.Installer/*
+    steps: ['sub-task:installer']

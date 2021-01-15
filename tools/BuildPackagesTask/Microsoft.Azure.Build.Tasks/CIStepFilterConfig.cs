@@ -28,7 +28,7 @@ namespace Microsoft.WindowsAzure.Build.Tasks
 
     class Rule
     {
-        public string Pattern { get; set; }
+        public List<string> Patterns { get; set; }
         public List<string> Steps { get; set; }
     }
 }

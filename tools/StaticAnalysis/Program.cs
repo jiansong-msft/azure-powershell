@@ -28,7 +28,6 @@ namespace StaticAnalysis
     {
         static IList<IStaticAnalyzer> Analyzers = new List<IStaticAnalyzer>()
         {
-            new DependencyAnalyzer.DependencyAnalyzer()
         };
 
         static IList<string> ExceptionFileNames = new List<string>()
@@ -106,17 +105,46 @@ namespace StaticAnalysis
                     }
                 }
 
-                Analyzers.Add(new SignatureVerifier.SignatureVerifier());
-                Analyzers.Add(new BreakingChangeAnalyzer.BreakingChangeAnalyzer());
-
-                var helpOnly = args.Any(a => a == "--help-only" || a == "-h");
-                var skipHelp = !helpOnly && args.Any(a => a == "--skip-help" || a == "-s");
-                if(helpOnly)
+                foreach (var moduleName in modulesToAnalyze)
                 {
-                    Analyzers.Clear();
+                    Console.WriteLine(string.Format("Module: {0}", moduleName));
                 }
-                if (!skipHelp)
+
+
+                if (args.Any(a => a == "--analyzers"))
                 {
+                    int idx = Array.FindIndex(args, a => a == "--analyzers");
+                    if (idx + 1 == args.Length)
+                    {
+                        throw new ArgumentException("No value provided for the --package-directory parameter.");
+                    }
+
+                    string analyzerNameList = args[idx + 1];
+                    foreach (string analyzerName in analyzerNameList.Split(';'))
+                    {
+                        if (analyzerName.ToLower().Equals("breaking-change"))
+                        {
+                            Analyzers.Add(new BreakingChangeAnalyzer.BreakingChangeAnalyzer());
+                        }
+                        if (analyzerName.ToLower().Equals("dependency"))
+                        {
+                            Analyzers.Add(new DependencyAnalyzer.DependencyAnalyzer());
+                        }
+                        if (analyzerName.ToLower().Equals("signature"))
+                        {
+                            Analyzers.Add(new SignatureVerifier.SignatureVerifier());
+                        }
+                        if (analyzerName.ToLower().Equals("help"))
+                        {
+                            Analyzers.Add(new HelpAnalyzer.HelpAnalyzer());
+                        }
+                    }
+                }
+                else
+                {
+                    Analyzers.Add(new BreakingChangeAnalyzer.BreakingChangeAnalyzer());
+                    Analyzers.Add(new DependencyAnalyzer.DependencyAnalyzer());
+                    Analyzers.Add(new SignatureVerifier.SignatureVerifier());
                     Analyzers.Add(new HelpAnalyzer.HelpAnalyzer());
                 }
 

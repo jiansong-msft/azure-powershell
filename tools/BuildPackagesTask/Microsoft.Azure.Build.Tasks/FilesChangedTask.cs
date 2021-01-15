@@ -72,7 +72,6 @@ namespace Microsoft.WindowsAzure.Build.Tasks
             }
 
             var debugEnvironmentVariable = Environment.GetEnvironmentVariable("DebugLocalBuildTasks");
-            Console.WriteLine("DebugLocalBuildTasks:" + debugEnvironmentVariable);
             bool debug;
             if (!Boolean.TryParse(debugEnvironmentVariable, out debug))
             {
